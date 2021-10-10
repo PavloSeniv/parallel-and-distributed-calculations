@@ -1,20 +1,54 @@
-﻿// Laba2.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+﻿#include <iostream>
+#include <thread>
+#include <mutex>
+#include <list>
+#include <algorithm>
 
-#include <iostream>
 
-int main()
+using namespace std;
+
+mutex m1;
+
+list<int> ls;
+
+
+void AddToList(int number)
 {
-    std::cout << "Hello World!\n";
+    for (int i = number; i < 1 + number; i++)
+    {
+        m1.lock();
+        ls.push_back(i);
+        cout << "Added: " << i << endl;
+        m1.unlock();
+    }
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
+void ListContains(int number)
+{
+    for (int i = 0; i < 1; i++)
+    {
+        m1.lock();
+        bool found = (find(ls.begin(), ls.end(), number) != ls.end());
 
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
+        if (found)
+        {
+            cout << "True " << endl;
+        }
+        else {
+            cout << "False " << endl;
+        }
+        m1.unlock();
+    }
+}
+
+int main() {
+
+    thread t1(AddToList, 10);
+
+    thread t2(ListContains, 10);
+
+    t1.join();
+    t2.join();
+    system("pause");
+    return 0;
+}
