@@ -52,3 +52,20 @@ int main() {
     system("pause");
     return 0;
 }
+
+class dataWrapper
+{
+private:
+someData data;
+std::mutex m;
+public :
+template<typename Function>
+void ProcessData(Function func) //Передача
+
+//«захищених» даних функції користувача
+
+{
+std::lock_guard<std::mutex> l(m);
+func(data);
+}
+};
