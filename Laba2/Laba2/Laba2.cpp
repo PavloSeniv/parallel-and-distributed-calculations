@@ -7,48 +7,43 @@
 //#include <algorithm>
 //
 //using namespace std;
-//list<int> l;
-//mutex m1;
-//
-//void AddToList(int number){
-//
-//	m1.lock();
-//	l.push_back(number);
-//	cout << number << " - pushed!\n";
-//	m1.unlock();
+//list<int> listNumber;
+//mutex mutex1;
+//void AddToList(int numberAdd){
+//	mutex1.lock();
+//	listNumber.push_back(numberAdd);
+//	cout << numberAdd << " Added\n";
+//	mutex1.unlock();
 //}
 //
-//void ListContains(int number){
-//
-//	m1.lock();
-//	auto exist = find(l.begin(), l.end(), number);
-//
-//	if (exist != l.end()) {
-//		cout << number << " - exist\n";
+//void ListContains(int numberAdd){
+//	mutex1.lock();
+//	auto exist = find(listNumber.begin(), listNumber.end(), numberAdd);
+//	if (exist != listNumber.end()) {
+//		cout << numberAdd << " True \n";
 //	}
 //	else
 //	{
-//		cout << number << " - not exist\n";
+//		cout << numberAdd << " False \n";
 //	}
-//
-//	m1.unlock();
+//	mutex1.unlock();
 //}
 //
 //int main() {
-//
-//	auto number = 16;
+//	auto numberMain = 16;
 //	for (int i = 0; i <= 10; i++)
 //	{
-//		thread t1(AddToList, number);
+//		thread t1(AddToList, numberMain);
 //		thread t2(ListContains, 19);
-//		number++;
-//		t1.join();
-//		t2.join();
+//		numberMain++;
+//		t1.detach();
+//		t2.detach();
 //	}
-//
+//	Sleep(1000);
 //	system("pause");
 //	return 0;
 //}
+
 
 //Task1 lock_guard
 //#include <iostream>
@@ -59,43 +54,42 @@
 //#include <algorithm>
 //
 //using namespace std;
-//list<int> l;
-//mutex m1;
 //
-//void AddToList(int number){
+//list<int> listNumber;
+//mutex mutex1;
 //
-//	lock_guard<std::mutex> guard(m1);
-//	l.push_back(number);
-//	cout << number << " - pushed!\n";
+//void AddToList(int numberAdd){
+//	lock_guard<std::mutex> guard(mutex1);
+//	listNumber.push_back(numberAdd);
+//	cout << numberAdd << " Added\n";
 //}
 //
-//void ListContains(int number){
-//
-//	lock_guard<std::mutex> guard(m1);
-//	auto exist = find(l.begin(), l.end(), number);
-//	if (exist != l.end()) {
-//		cout << number << " - exist\n";
+//void ListContains(int numberAdd){
+//	lock_guard<std::mutex> guard(mutex1);
+//	auto exist = find(listNumber.begin(), listNumber.end(), numberAdd);
+//	if (exist != listNumber.end()) {
+//		cout << numberAdd << " True \n";
 //	}
 //	else
 //	{
-//		cout << number << " - not exist\n";
+//		cout << numberAdd << " False \n";
 //	}
 //}
 //
 //int main() {
-//
-//	auto number = 16;
-//	for (int i = 0; i <= 10; i++)
-//	{
-//		thread t1(AddToList, number);
+//	auto numberMain = 16;
+//	for (int i = 0; i <= 10; i++){
+//		thread t1(AddToList, numberMain);
 //		thread t2(ListContains, 19);
-//		number++;
-//		t1.join();
-//		t2.join();
+//		numberMain++;
+//		t1.detach();
+//		t2.detach();
 //	}
+//	Sleep(1000);
 //	system("pause");
 //	return 0;
 //}
+
  
 //Task2
 //#include <iostream>
@@ -109,111 +103,91 @@
 //
 //class someData {
 //public:
-//	string firstName;
-//	string lastName;
-//	string address;
-//	int age;
+//	string firstNamePeople;
+//	string lastNamePeople;
+//	string addressPeople;
+//	int agePeople;
 //};
 //
 //class exchangePerson {
-//
 //public:
-//	someData data;
-//	mutex myMutex;
+//	someData someData;
+//	mutex Mutex1;
 //
-//	static void JohnDoe(exchangePerson& person) {
-//
-//		lock_guard<mutex> guard(person.myMutex);
-//		person.data.firstName = "John";
-//		person.data.lastName = "Doe";
-//		person.data.address = "Unknown";
-//		person.data.age = 120;
+//	static void JohnDoe(exchangePerson& people1) {
+//		lock_guard<mutex> guard(people1.Mutex1);
+//		people1.someData.firstNamePeople = "John";
+//		people1.someData.lastNamePeople = "Doe";
+//		people1.someData.addressPeople = "Unknown";
+//		people1.someData.agePeople = 120;
 //	}
 //
-//	static void JacobSmith(exchangePerson& person) {
-//
-//		lock_guard<mutex> guard(person.myMutex);
-//		person.data.firstName = "Jacob";
-//		person.data.lastName = "Smith";
-//		person.data.address = "Known";
-//		person.data.age = 1;
+//	static void JacobSmith(exchangePerson& people2) {
+//		lock_guard<mutex> guard(people2.Mutex1);
+//		people2.someData.firstNamePeople = "Jacob";
+//		people2.someData.lastNamePeople = "Smith";
+//		people2.someData.addressPeople = "Known";
+//		people2.someData.agePeople = 1;
 //	}
 //
-//	static void Swap(exchangePerson& p1, exchangePerson& p2) {
-//
-//		Show(p1, "Person 1 before swap");
-//		Show(p2, "Person 2 before swap");
-//
-//		if (!AreEqual(p1, p2)){
-//
-//			lock(p1.myMutex, p2.myMutex);
-//			lock_guard<mutex> lock1(p1.myMutex, adopt_lock);
-//			lock_guard<mutex> lock2(p2.myMutex, adopt_lock);
+//	static void Swap(exchangePerson& people1, exchangePerson& people2) {
+//		Show(people1, "Person 1 before swap");
+//		Show(people2, "Person 2 before swap");
+//		if (addressof(people1) != addressof(people2))
+//		{
+//			lock(people1.Mutex1, people2.Mutex1);
+//			lock_guard<mutex> lock1(people1.Mutex1, adopt_lock);
+//			lock_guard<mutex> lock2(people2.Mutex1, adopt_lock);
 //
 //			exchangePerson newPerson;
 //
-//			newPerson.data.firstName = p1.data.firstName;
-//			newPerson.data.lastName = p1.data.lastName;
-//			newPerson.data.address = p1.data.address;
-//			newPerson.data.age = p1.data.age;
+//			newPerson.someData.firstNamePeople = people1.someData.firstNamePeople;
+//			newPerson.someData.lastNamePeople = people1.someData.lastNamePeople;
+//			newPerson.someData.addressPeople = people1.someData.addressPeople;
+//			newPerson.someData.agePeople = people1.someData.agePeople;
 //
-//			p1.data.firstName = p2.data.firstName;
-//			p1.data.lastName = p2.data.lastName;
-//			p1.data.address = p2.data.address;
-//			p1.data.age = p2.data.age;
+//			people1.someData.firstNamePeople = people2.someData.firstNamePeople;
+//			people1.someData.lastNamePeople = people2.someData.lastNamePeople;
+//			people1.someData.addressPeople = people2.someData.addressPeople;
+//			people1.someData.agePeople = people2.someData.agePeople;
 //
-//			p2.data.firstName = newPerson.data.firstName;
-//			p2.data.lastName = newPerson.data.lastName;
-//			p2.data.address = newPerson.data.address;
-//			p2.data.age = newPerson.data.age;
-//
-//			Show(p1, "Person 1 after swap");
-//			Show(p2, "Person 2 after swap");
+//			people2.someData.firstNamePeople = newPerson.someData.firstNamePeople;
+//			people2.someData.lastNamePeople = newPerson.someData.lastNamePeople;
+//			people2.someData.addressPeople = newPerson.someData.addressPeople;
+//			people2.someData.agePeople = newPerson.someData.agePeople;
+//			Show(people1, "Person 1 after swap");
+//			Show(people2, "Person 2 after swap");
 //		}
 //	}
 //
 //	static void Show(exchangePerson& person, string text) {
-//		cout << text << " -> firstName - " << person.data.firstName << ", lastName - " << person.data.lastName << ", age - " << person.data.age << ", address - " << person.data.address << "\n";
-//	}
-//
-//	static bool AreEqual(const exchangePerson& a, const exchangePerson& b){
-//		return addressof(a) == addressof(b);
+//		cout << text << " -> firstName - " << person.someData.firstNamePeople << ", lastName - " << person.someData.lastNamePeople << ", age - " << person.someData.agePeople << ", address - " << person.someData.addressPeople << "\n";
 //	}
 //};
 //
-//
-//void JohnDoe(exchangePerson& person){
-//	person.JohnDoe(person);
-//	person.Show(person, "Person 1");
-//}
-//
-//void JacobSmith(exchangePerson& person){
-//	person.JacobSmith(person);
-//	person.Show(person, "Person 2");
-//}
-//
-//void Swap(exchangePerson& person1, exchangePerson& person2){
-//	person1.Swap(person1, person2);
-//	person2.Swap(person1, person2);
-//}
-//
 //int main() {
-//	exchangePerson person1;
-//	exchangePerson person2;
+//	exchangePerson people1;
+//	exchangePerson people2;
 //
-//	thread t1(JohnDoe, ref(person1));
-//	t1.join();
-//	thread t2(JacobSmith, ref(person2));
-//	t2.join();
+//	thread t1(exchangePerson::JohnDoe, ref(people1));
+//	t1.detach();
+//	thread t2(exchangePerson::JacobSmith, ref(people1));
+//	t2.detach();
 //
-//	thread t3(Swap, ref(person1), ref(person2));
-//	t3.join();
+//	thread t3(exchangePerson::JacobSmith, ref(people2));
+//	t3.detach();
+//	thread t4(exchangePerson::JohnDoe, ref(people2));
+//	t4.detach();
+//
+//	thread t5(exchangePerson::Swap, ref(people1), ref(people2));
+//	t5.join();
 //
 //	system("pause");
 //	return 0;
 //}
 
 //Task3
+
 #include <iostream>
 #include <thread>
 #include <mutex>
@@ -224,106 +198,87 @@
 using namespace std;
 
 class someData {
-
 public:
-	string firstName;
-	string lastName;
-	string address;
-	int age;
+	string firstNamePeople;
+	string lastNamePeople;
+	string addressPeople;
+	int agePeople;
 };
 
 class exchangePerson {
-
 public:
-	someData data;
-	mutex myMutex;
+	someData someData;
+	mutex Mutex1;
 
-	static void JohnDoe(exchangePerson& person) {
-		lock_guard<mutex> guard(person.myMutex);
-		person.data.firstName = "John";
-		person.data.lastName = "Doe";
-		person.data.address = "Unknown";
-		person.data.age = 120;
+
+	static void JohnDoe(exchangePerson& people1) {
+		lock_guard<mutex> guard(people1.Mutex1);
+		people1.someData.firstNamePeople = "John";
+		people1.someData.lastNamePeople = "Doe";
+		people1.someData.addressPeople = "Unknown";
+		people1.someData.agePeople = 120;
 	}
 
-	static void JacobSmith(exchangePerson& person) {
-		lock_guard<mutex> guard(person.myMutex);
-		person.data.firstName = "Jacob";
-		person.data.lastName = "Smith";
-		person.data.address = "Known";
-		person.data.age = 1;
+	static void JacobSmith(exchangePerson& people2) {
+		lock_guard<mutex> guard(people2.Mutex1);
+		people2.someData.firstNamePeople = "Jacob";
+		people2.someData.lastNamePeople = "Smith";
+		people2.someData.addressPeople = "Known";
+		people2.someData.agePeople = 1;
 	}
 
-	static void Swap(exchangePerson& p1, exchangePerson& p2) {
-		Show(p1, "Person 1 before swap");
-		Show(p2, "Person 2 before swap");
-
-		if (!AreEqual(p1, p2)){
-
-			unique_lock<mutex> lock1(p1.myMutex, defer_lock);
-			unique_lock<mutex> lock2(p2.myMutex, defer_lock);
+	static void Swap(exchangePerson& people1, exchangePerson& people2) {
+		Show(people1, "Person 1 before swap");
+		Show(people2, "Person 2 before swap");
+		if (addressof(people1) != addressof(people2))
+		{
+			unique_lock<mutex> lock1(people1.Mutex1, defer_lock);
+			unique_lock<mutex> lock2(people2.Mutex1, defer_lock);
 			lock(lock1, lock2);
 
 			exchangePerson newPerson;
 
-			newPerson.data.firstName = p1.data.firstName;
-			newPerson.data.lastName = p1.data.lastName;
-			newPerson.data.address = p1.data.address;
-			newPerson.data.age = p1.data.age;
+			newPerson.someData.firstNamePeople = people1.someData.firstNamePeople;
+			newPerson.someData.lastNamePeople = people1.someData.lastNamePeople;
+			newPerson.someData.addressPeople = people1.someData.addressPeople;
+			newPerson.someData.agePeople = people1.someData.agePeople;
 
-			p1.data.firstName = p2.data.firstName;
-			p1.data.lastName = p2.data.lastName;
-			p1.data.address = p2.data.address;
-			p1.data.age = p2.data.age;
+			people1.someData.firstNamePeople = people2.someData.firstNamePeople;
+			people1.someData.lastNamePeople = people2.someData.lastNamePeople;
+			people1.someData.addressPeople = people2.someData.addressPeople;
+			people1.someData.agePeople = people2.someData.agePeople;
 
-			p2.data.firstName = newPerson.data.firstName;
-			p2.data.lastName = newPerson.data.lastName;
-			p2.data.address = newPerson.data.address;
-			p2.data.age = newPerson.data.age;
-
-			Show(p1, "Person 1 after swap");
-			Show(p2, "Person 2 after swap");
+			people2.someData.firstNamePeople = newPerson.someData.firstNamePeople;
+			people2.someData.lastNamePeople = newPerson.someData.lastNamePeople;
+			people2.someData.addressPeople = newPerson.someData.addressPeople;
+			people2.someData.agePeople = newPerson.someData.agePeople;
+			Show(people1, "Person 1 after swap");
+			Show(people2, "Person 2 after swap");
 		}
 	}
 
 	static void Show(exchangePerson& person, string text) {
-		cout << text << " -> firstName - " << person.data.firstName << ", lastName - " << person.data.lastName << ", age - " << person.data.age << ", address - " << person.data.address << "\n";
-	}
-
-	static bool AreEqual(const exchangePerson& a, const exchangePerson& b){
-		return addressof(a) == addressof(b);
+		cout << text << " -> firstName - " << person.someData.firstNamePeople << ", lastName - " << person.someData.lastNamePeople << ", age - " << person.someData.agePeople << ", address - " << person.someData.addressPeople << "\n";
 	}
 };
 
-
-void JohnDoe(exchangePerson& person){
-	person.JohnDoe(person);
-	person.Show(person, "Person 1");
-}
-
-void JacobSmith(exchangePerson& person){
-	person.JacobSmith(person);
-	person.Show(person, "Person 2");
-}
-
-void Swap(exchangePerson& person1, exchangePerson& person2){
-	person1.Swap(person1, person2);
-	person2.Swap(person1, person2);
-}
-
 int main() {
-	exchangePerson person1;
-	exchangePerson person2;
+	exchangePerson people1;
+	exchangePerson people2;
 
-	thread t1(JohnDoe, ref(person1));
-	t1.join();
-	thread t2(JacobSmith, ref(person2));
-	t2.join();
+	thread t1(exchangePerson::JohnDoe, ref(people1));
+	t1.detach();
+	thread t2(exchangePerson::JacobSmith, ref(people1));
+	t2.detach();
 
-	thread t3(Swap, ref(person1), ref(person2));
-	t3.join();
+	thread t3(exchangePerson::JacobSmith, ref(people2));
+	t3.detach();
+	thread t4(exchangePerson::JohnDoe, ref(people2));
+	t4.detach();
+
+	thread t5(exchangePerson::Swap, ref(people1), ref(people2));
+	t5.join();
 
 	system("pause");
 	return 0;
 }
-
